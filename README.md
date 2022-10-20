@@ -5,9 +5,9 @@ and detect new products based on custom search queries, and emails you a nicely 
 
 ## Screenshots
 
-| Main Window                                 | Example Email                   |
-|:-------------------------------------------:|:--------------------------------| 
-| ![Main Window](screenshots/main_window.png) | ![Email](screenshots/email.png) |
+| Main Window                                 | Example Email                   | Preferences                           |
+|:-------------------------------------------:|:-------------------------------:|:-------------------------------------:|
+| ![Main Window](screenshots/main_window.png) | ![Email](screenshots/email.png) | ![Email](screenshots/preferences.png) |
 
 ## Installation
 
