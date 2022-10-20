@@ -1,0 +1,5 @@
+selenium
+beautifulsoup4
+PyQt5
+yagmail
+chromedriver_autoinstaller

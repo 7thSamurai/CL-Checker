@@ -1,0 +1,8 @@
+{
+    "db_path": "test.db",
+    "update_secs": 300,
+    "auto_start": false,
+    "from_email": "",
+    "from_password": "",
+    "to_email": ""
+}
