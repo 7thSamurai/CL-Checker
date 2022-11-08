@@ -10,7 +10,7 @@ from config import config
 from db import DB, Product
 
 from PyQt5.QtCore import *
-import logging
+import logging, time, re
 
 class Updater(QThread):
     """
@@ -57,13 +57,13 @@ class Updater(QThread):
         self.driver.maximize_window()
         self.driver.delete_all_cookies()
 
-    def search_page(self, query_url, db):
+    def search_page1(self, query_url, db):
         """
         Helper function to search the current page for new products, update the 
         database, and return a list of newly found products.
         """
 
-        logging.info(f'Searching {self.driver.current_url}')
+        logging.info(f'Searching {self.driver.current_url} using method 1')
 
         # Parse the webpage and find the search results
         soup = BeautifulSoup(self.driver.page_source, 'html.parser')
@@ -101,6 +101,84 @@ class Updater(QThread):
             
         return new_products
 
+    def search_page2(self, query_url, db):
+        """
+        Helper function to search the current page for new products, update the 
+        database, and return a list of newly found products.
+        """
+
+        logging.info(f'Searching {self.driver.current_url} using method 2')
+
+        # Parse the webpage and find the search results
+        soup = BeautifulSoup(self.driver.page_source, 'html.parser')
+        results = soup.find('div', {'id': 'search-results-page-1'})
+        
+        # List of new products that we have found
+        new_products = []
+        
+        # Attempt to locate the nearby results seperator
+        stop_tag = results.find('li', {'class': 'nearby-separator'})
+
+        # If there is one, stop there
+        if stop_tag != None:
+            rows = stop_tag.findAllPrevious('li', {'class': 'cl-search-result'})
+        else:
+            rows = results.findAll('li', {'class': 'cl-search-result'})
+ 
+        # Go through each search result
+        for result in rows:
+            # Extract the different information that we need
+            link = result.find('a', {'class': 'titlestring'})
+            name = link.text
+            url = link.get('href')
+            id = re.findall('^.+/(\d+)\.html$', url)
+
+            # Make sure that we were able to extract an ID
+            if not len(id):
+                logging.error(f'Unable to extract ID from URL {url}, skipping')
+                continue
+
+            # Create a product data structure representing it
+            product = Product(id[0], name, url, query_url)
+            
+            # Check if this is a new product that we've not found before
+            if db.get_product(product) == None:
+                new_products.append(product)
+            
+            # Add or update the product in the database
+            db.add_product(product)
+            
+        return new_products
+
+    def next_page1(self):
+        # Check if there's a link to the next page
+        try:
+            next_link = self.driver.find_element('xpath', '//a[@class="button next"]')
+            href = next_link.get_attribute('href')
+            more_pages = len(href) != 0
+                
+            # Load the new page
+            if more_pages:
+                self.driver.get(href)
+            
+        except:
+            more_pages = False
+
+        return more_pages
+
+    def next_page2(self):
+        # Locate the next page button
+        next_page = self.driver.find_element('xpath', '//button[contains(@class, "cl-next-page")]')
+
+        # Check if the button is disabled, i.e. no more pages
+        disabled = 'bd-disabled' in next_page.get_attribute('class').split()
+        if disabled:
+            return False
+
+        # If not, then click the button to move onto the next page
+        next_page.click()
+        return True
+
     def update_products(self, query_url, db):
         """
         Goes to the query-url, iterates through all the pages, and finds and returns
@@ -109,6 +187,7 @@ class Updater(QThread):
         
         # Load the webpage
         self.driver.get(query_url)
+        time.sleep(1)
 
         # List of new products that we have found
         new_products = []
@@ -120,20 +199,13 @@ class Updater(QThread):
             if self.isInterruptionRequested():
                 return new_products
         
-            # Search the page for products
-            new_products.extend(self.search_page(query_url, db))
-            
-            # Check if there's a link to the next page
-            try:
-                next_link = self.driver.find_element('xpath', '//a[@class="button next"]')
-                href = next_link.get_attribute("href")
-                more_pages = len(href) != 0
-                
-                # Load the new page
-                if more_pages:
-                    self.driver.get(href)
-            except:
-                more_pages = False
+            # Check if what type of URL we have, so we know what method to search the pages with
+            if re.search('^.+#search=\d+~gallery~\d+~\d+$', self.driver.current_url):
+                new_products.extend(self.search_page2(query_url, db))
+                more_pages = self.next_page2()
+            else:
+                new_products.extend(self.search_page1(query_url, db))
+                more_pages = self.next_page1()
 
         return new_products
         
