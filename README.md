@@ -9,7 +9,7 @@ and detect new products based on custom search queries, and emails you a nicely 
 |:-------------------------------------------:|:-------------------------------:|:-------------------------------------:|
 | ![Main Window](screenshots/main_window.png) | ![Email](screenshots/email.png) | ![Email](screenshots/preferences.png) |
 
-## Installation
+## Running
 
 First make sure that you have a copy of **Google Chrome** installed on your PC. Then install the Python dependencies with:
 
@@ -21,6 +21,20 @@ Now you may run the program with:
 
 ```
 $ python checker.py
+```
+
+## Installation
+
+You may alternatively build an EXE with the following command:
+
+```
+$ pyinstaller -y checker.spec
+```
+
+You can then generate an installer using [Inno Setup](https://jrsoftware.org/isinfo.php):
+
+```
+$ iscc inno_config.iss
 ```
 
 ## Setup
