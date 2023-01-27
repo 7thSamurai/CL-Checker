@@ -19,6 +19,7 @@ class Config:
                 os.mkdir(self.appdata)
             except:
                 print(f'Unable to create directory {self.appdata}')
+                exit(1)
         
         # Generate the config path
         self.config_path = os.path.join(self.appdata, 'config.json')

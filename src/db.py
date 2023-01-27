@@ -80,7 +80,6 @@ class DB:
     """
 
     def __init__(self, path):
-        path = os.path.join(os.path.dirname(__file__), path)
         exists = os.path.exists(path)
 
         try:
