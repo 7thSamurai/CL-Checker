@@ -335,8 +335,8 @@ class Main(QMainWindow):
         help_menu.addAction(about_action)
         
         # Load the icona
-        self.icon = QIcon(os.path.join(os.path.dirname(__file__), 'icon.png'))
-        self.icon_error = QIcon(os.path.join(os.path.dirname(__file__), 'icon_error.png'))
+        self.icon = QIcon(os.path.join(os.path.dirname(__file__), 'assets/icon.png'))
+        self.icon_error = QIcon(os.path.join(os.path.dirname(__file__), 'assets/icon_error.png'))
         
         # Setup the icon on the system tray
         self.tray = QSystemTrayIcon(self.icon, app)
@@ -664,7 +664,7 @@ class Main(QMainWindow):
    
         # Play the alarm if we found any queries that had it enabled
         if play_alarm:
-            QSound.play(os.path.join(os.path.dirname(__file__), 'alert.wav'))
+            QSound.play(os.path.join(os.path.dirname(__file__), 'assets/alert.wav'))
     
         # Restart the update timer
         if restart_timer:
