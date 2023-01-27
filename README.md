@@ -1,7 +1,8 @@
 # CL-Checker
 
 An automated **Craigslist Webscrapper** with an easy to use GUI that runs in the system tray and uses a headless instance of Google Chrome to scrape 
-and detect new products based on custom search queries, and emails you a nicely formated list of the results. Written in Python, for Windows. 
+and detect new products based on custom search queries, and emails you a nicely formated list of the results. Written in Python, for Windows.
+Download a pre-build binary [here](https://github.com/7thSamurai/CL-Checker/releases).
 
 ## Screenshots
 
