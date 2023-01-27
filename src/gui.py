@@ -334,9 +334,10 @@ class Main(QMainWindow):
         about_action.triggered.connect(self.about_dialog)
         help_menu.addAction(about_action)
         
-        # Load the icona
+        # Load the icons
         self.icon = QIcon(os.path.join(os.path.dirname(__file__), 'assets/icon.png'))
         self.icon_error = QIcon(os.path.join(os.path.dirname(__file__), 'assets/icon_error.png'))
+        self.setWindowIcon(self.icon)
         
         # Setup the icon on the system tray
         self.tray = QSystemTrayIcon(self.icon, app)
