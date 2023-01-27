@@ -39,7 +39,7 @@ def main():
 
 if __name__ == '__main__':
     # Setup logging
-    log_path = os.path.join(os.path.dirname(__file__), 'debug.log')
+    log_path = os.path.join(config.appdata, 'debug.log')
 
     logging.basicConfig(
         level = logging.INFO,
