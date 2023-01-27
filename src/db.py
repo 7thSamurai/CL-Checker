@@ -110,6 +110,7 @@ class DB:
                 );''')
 
             self.conn.commit()
+            print('Created empty database')
             
     def get_queries(self):
         """

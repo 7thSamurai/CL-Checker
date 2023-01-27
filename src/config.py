@@ -1,21 +1,22 @@
 import json, os
 
 class Config:
-    def __init__(self):
+    def __init__(self):    
+        # Find the AppData path
+        self.appdata = os.path.join(os.getenv('LOCALAPPDATA'), 'CL-Checker')
+        
         # Setup the default config values
-        self.db_path = 'checker.db'
+        self.db_path = os.path.join(self.appdata, 'checker.db')
         self.update_secs = 300
         self.auto_start = False
         self.from_email = ''
         self.from_password = ''
         self.to_email = ''
-    
-        # Find the AppData path
-        self.appdata = os.path.join(os.getenv('LOCALAPPDATA'), 'CL-Checker')
         
         # Make sure the the AppData directory exists
         if not os.path.isdir(self.appdata):
             try:
+                print('Creating AppData directory...')
                 os.mkdir(self.appdata)
             except:
                 print(f'Unable to create directory {self.appdata}')
@@ -25,10 +26,12 @@ class Config:
         self.config_path = os.path.join(self.appdata, 'config.json')
         
         # Load the data from the config if it exists, otherwise save the default values
-        if self.path.exists(self.config_path):
+        if os.path.exists(self.config_path):
             self.load()
+            print('Loaded config')
         else:
             self.save()
+            print('Created default config')
 
     def load(self):
         # Load the config data from a JSON file
