@@ -200,7 +200,7 @@ class Updater(QThread):
                 return new_products
         
             # Check if what type of URL we have, so we know what method to search the pages with
-            if re.search('^.+#search=\d+~grid~\d+~\d+$', self.driver.current_url):
+            if re.search('^.+#search=\d+~.+~\d+~\d+$', self.driver.current_url):
                 new_products.extend(self.search_page2(query_url, db))
                 more_pages = self.next_page2()
             else:
